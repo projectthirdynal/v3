@@ -1,0 +1,34 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    container_name: myshop-db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - aimeos-data-network
+
+  redis:
+    image: redis:alpine
+    container_name: myshop-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    networks:
+      - aimeos-data-network
+
+networks:
+  aimeos-data-network:
+    driver: bridge
+
+volumes:
+  db-data:
